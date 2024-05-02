@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_calorie_recognition/presentation/check_calorie/view/check_calorie_view.dart';
+import 'package:food_calorie_recognition/presentation/new_check_calorie/new_check_calorie.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 30),
             ElevatedButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (contex)=>CheckCalorie()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>NewCalorieCheck()));
             }, child: Text("check calories"))
           ],
         ),
