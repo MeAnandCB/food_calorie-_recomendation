@@ -9,8 +9,8 @@ class ImageIconButton extends StatelessWidget {
   final Color iconColor;
   final Color buttonColor;
 
-   ImageIconButton({
-    // Key key,
+  const ImageIconButton({
+    super.key,
     required this.width,
     required this.height,
     required this.onPressed,
@@ -19,7 +19,8 @@ class ImageIconButton extends StatelessWidget {
     this.iconColor = Colors.black,
     this.buttonColor = Colors.green,
   });
-      // : super(key: key);
+
+  // : super(key: key);
 
   @override
   Widget build(BuildContext context) {
