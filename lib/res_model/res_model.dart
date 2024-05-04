@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
 class FoodResponse {
   final String image;
   final String predictedFood;
@@ -25,9 +22,9 @@ class FoodResponse {
 }
 
 class CaloriesData {
-  final int carbohydrate;
-  final int fat;
-  final int calories;
+  final double carbohydrate;
+  final double fat;
+  final double calories;
   final double protein;
   final String ingredients;
   final String healthyOrUnhealthy;
@@ -43,10 +40,10 @@ class CaloriesData {
 
   factory CaloriesData.fromJson(Map<String, dynamic> json) {
     return CaloriesData(
-      carbohydrate: json['Carbohydrate'],
-      fat: json['fat'],
-      calories: json['calories'],
-      protein: json['protein'],
+      carbohydrate: json['Carbohydrate'].toDouble(),
+      fat: json['fat'].toDouble(),
+      calories: json['calories'].toDouble(),
+      protein: json['protein'].toDouble(),
       ingredients: json['Ingredients'],
       healthyOrUnhealthy: json['Healthy or Unhealthy'],
     );
