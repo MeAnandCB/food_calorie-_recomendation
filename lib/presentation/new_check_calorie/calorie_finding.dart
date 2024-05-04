@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:food_calorie_recognition/app_config/app_config.dart';
+import 'package:food_calorie_recognition/res_model/res_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +39,7 @@ class _NewCalorieCheckState extends State<NewCalorieCheck> {
       isLoading = true; // Set loading state to true when uploading image
     });
 
-    final uri = Uri.parse('http://10.11.0.153:8000/accounts/checkcalorie/');
+    final uri = Uri.parse('http://10.0.2.2:8000/accounts/checkcalorie/');
     final request = http.MultipartRequest('POST', uri);
 
     request.files.add(await http.MultipartFile.fromPath(
@@ -50,15 +52,33 @@ class _NewCalorieCheckState extends State<NewCalorieCheck> {
     final response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      final foodResponse = FoodResponse.fromJson(jsonResponse);
+
       isLoading = false; // Set loading state to false after receiving response
       print('Image uploaded successfully');
-      print('Response: ${response.body}');
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ResponsePage(responseBody: response.body),
-        ),
-      );
+      print('Response:');
+      print('Image: ${foodResponse.image}');
+      print('Predicted Food: ${foodResponse.predictedFood}');
+      print('Carbohydrate: ${foodResponse.caloriesData.carbohydrate}');
+      print('Fat: ${foodResponse.caloriesData.fat}');
+      print('Calories: ${foodResponse.caloriesData.calories}');
+      print('Protein: ${foodResponse.caloriesData.protein}');
+      print('Ingredients: ${foodResponse.caloriesData.ingredients}');
+      print(
+          'Healthy or Unhealthy: ${foodResponse.caloriesData.healthyOrUnhealthy}');
+      print('Predicted Volume: ${foodResponse.predictedVolume}');
+
+      if (response.body.isNotEmpty) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResponsePage(responseBody: foodResponse),
+          ),
+        );
+      } else {
+        print("Response body is empty");
+      }
     } else {
       isLoading = false; // Set loading state to false if upload fails
       print('Failed to upload image. Error: ${response.reasonPhrase}');
@@ -75,11 +95,11 @@ class _NewCalorieCheckState extends State<NewCalorieCheck> {
         child: _image == null
             ? Text('Please select an image')
             : Image.file(
-          _image!,
-          height: MediaQuery.of(context).size.height * 0.55,
-          width: MediaQuery.of(context).size.width * 0.75,
-          fit: BoxFit.contain,
-        ),
+                _image!,
+                height: MediaQuery.of(context).size.height * 0.55,
+                width: MediaQuery.of(context).size.width * 0.75,
+                fit: BoxFit.contain,
+              ),
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -123,15 +143,15 @@ class _NewCalorieCheckState extends State<NewCalorieCheck> {
           child: Center(
             child: isLoading // Display loading indicator conditionally
                 ? CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            )
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  )
                 : Text(
-              "Submit",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+                    "Submit",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
           ),
         ),
       ),
